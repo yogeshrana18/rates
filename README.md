@@ -35,5 +35,5 @@ Why FastAPI?
 I would like to make a batch, where a collection of large data will insert into the batch and load into the work queue. Now in order to get performance, Inside work queue, we will divide our input data of large amount into chunks and store into multiple block sizes. After that, we will pull that data from our work queue of blocks and push it to process into a thread. Processing on data to thread could be done in serial processing or parallel processing. But to optimize our tasks in less amount of time we will choose multiple threads (parallel processing). Any system that has more threads will be working faster on that. Lastly, it generates results or saves them to the database. So that is how I can work on a large amount of data.
 
 
-
+Time Took: It took 9 - 10 hours
 
