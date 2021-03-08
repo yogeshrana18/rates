@@ -53,7 +53,7 @@ class Rating:
                 # Query for inserting data
                 session.execute(
                     insert_query.format(self.origin, self.destination, current_date, int(price)))
-                item={"origin": self.origin, "destination": self.destination, "day": current_date, "price": int(price)}
+                item = {"origin": self.origin, "destination": self.destination, "day": current_date, "price": int(price)}
                 result.append(item)
                 current_date += day  # Increment day
             # saving inputs to db

@@ -5,8 +5,8 @@ import uvicorn as uvicorn
 from fastapi import FastAPI
 from starlette.responses import JSONResponse
 # Local
-from data_models import SearchResponse, SubmitRates, UploadResponse
-from helpers import Rating, price_convert
+from app.data_models import SearchResponse, SubmitRates, UploadResponse
+from app.helpers import Rating, price_convert
 
 app = FastAPI(title='RatesTask API')
 

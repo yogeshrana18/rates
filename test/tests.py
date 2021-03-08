@@ -2,8 +2,9 @@ from decimal import Decimal
 import datetime
 import unittest
 from fastapi.testclient import TestClient
-from helpers import Rating
-from main import app
+
+from app.helpers import Rating
+from app.main import app
 
 client = TestClient(app)
 
@@ -45,35 +46,35 @@ class TestRates(unittest.TestCase):
         expected_output = [
             {"origin": "CNSGH",
              "destination": "CNSGH",
-             "day": datetime.date(2021, 3, 29),
+             "day": datetime.date(2021, 4, 29),
              "price": 2
              },
             {
                 "origin": "CNSGH",
                 "destination": "CNSGH",
-                "day": datetime.date(2021, 3, 30),
+                "day": datetime.date(2021, 4, 30),
                 "price": 2
             }]
-        rating_obj = Rating('CNSGH', 'CNSGH', datetime.date(2021, 3, 29), datetime.date(2021, 3, 30))
+        rating_obj = Rating('CNSGH', 'CNSGH', datetime.date(2021, 4, 29), datetime.date(2021, 4, 30))
         output = rating_obj.upload(2)
+        print('@@@',output)
         self.assertEqual(expected_output, output)
 
     def test_fetch_valid_shipping_rates_with_null_between_two_ports_returns_null_if_count_less_than_3(self):
-        rating_obj = Rating('CNSGH', 'CNSGH', datetime.date(2021, 3, 29), datetime.date(2021, 3, 31))
+        rating_obj = Rating('CNSGH', 'CNSGH', datetime.date(2021, 4, 29), datetime.date(2021, 4, 31))
         output = rating_obj.search(null_results=True)
         expected_output = [
             {
-                "day": datetime.date(2021, 3, 29),
+                "day": datetime.date(2021, 4, 29),
                 "average_price": None
             },
             {
-                "day": datetime.date(2021, 3, 30),
+                "day": datetime.date(2021, 4, 30),
                 "average_price": None
             }]
         self.assertEqual(expected_output, output)
 
     def test_api_post_with_date_from_greter_than_date_to(self):
-        """Check a post request with no date_from."""
         result = client.post('/upload_price/',
                                     json={"origin":"CNSGH", "destination":"CNSGH", "date_from":"2018-02-13", "date_to":"2018-02-12",
                                               "price":"1000"})
@@ -81,7 +82,6 @@ class TestRates(unittest.TestCase):
         self.assertIn('{"status":"error","message":"date_from is greater than date_to"}', result.text)
 
     def test_api_post_with_correct_currency_code(self):
-        """Check a post request with no date_from."""
         result = client.post('/upload_price/',
                                     json={"origin":"CNSGH", "destination":"CNSGH", "date_from":"2018-02-11", "date_to":"2018-02-12",
                                               "price":"78", "currency_code": "INR"})
@@ -90,9 +90,8 @@ class TestRates(unittest.TestCase):
                       '{"origin":"CNSGH","destination":"CNSGH","day":"2018-02-12","price":1}]}', result.text)
 
     def test_api_post_with_invalid_currency_code(self):
-        """Check a post request with no date_from."""
         result = client.post('/upload_price/',
-                                    json={"origin":"CNSGH", "destination":"CNSGH", "date_from":"2018-02-11", "date_to":"2018-02-12",
+                                    json={"origin":"CNSGH", "destination": "CNSGH", "date_from":"2018-02-11", "date_to":"2018-02-12",
                                               "price":"78", "currency_code": "IND"})
         print(result.text)
         self.assertEqual(result.status_code, 400)
